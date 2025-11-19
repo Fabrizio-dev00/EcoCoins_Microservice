@@ -1,16 +1,24 @@
 package com.ecocoins.ecocoins_microservice.controller;
 
+import com.ecocoins.ecocoins_microservice.dto.ApiResponse;
+import com.ecocoins.ecocoins_microservice.dto.UsuarioResponse;
 import com.ecocoins.ecocoins_microservice.model.Usuario;
 import com.ecocoins.ecocoins_microservice.service.UsuarioService;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.security.SecurityRequirement;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+
 import java.util.List;
 import java.util.Map;
 
 @RestController
 @RequestMapping("/api/usuarios")
 @CrossOrigin(origins = "*")
+@SecurityRequirement(name = "bearerAuth")
+@Tag(name = "Usuarios", description = "Gestión de usuarios del sistema")
 public class UsuarioController {
 
     private final UsuarioService usuarioService;
@@ -19,39 +27,57 @@ public class UsuarioController {
         this.usuarioService = usuarioService;
     }
 
+    /**
+     * Listar todos los usuarios
+     * GET /api/usuarios
+     */
     @GetMapping
-    public ResponseEntity<List<Usuario>> listar() {
+    @Operation(summary = "Listar usuarios", description = "Obtiene todos los usuarios del sistema (solo admin)")
+    public ResponseEntity<ApiResponse<List<Usuario>>> listar() {
         List<Usuario> usuarios = usuarioService.listarUsuarios();
-        return ResponseEntity.ok(usuarios);
+        return ResponseEntity.ok(ApiResponse.success(usuarios));
     }
 
-
-    @PostMapping("/registrar")
-    public ResponseEntity<Usuario> registrar(@RequestBody Usuario usuario) {
-        Usuario nuevo = usuarioService.registrarUsuario(usuario);
-        return ResponseEntity.status(HttpStatus.CREATED).body(nuevo);
+    /**
+     * Obtener usuario por ID
+     * GET /api/usuarios/{id}
+     */
+    @GetMapping("/{id}")
+    @Operation(summary = "Obtener usuario", description = "Obtiene un usuario específico por su ID")
+    public ResponseEntity<ApiResponse<Usuario>> obtenerPorId(@PathVariable String id) {
+        Usuario usuario = usuarioService.obtenerPorId(id);
+        return ResponseEntity.ok(ApiResponse.success(usuario));
     }
 
-    @PostMapping("/login")
-    public ResponseEntity<?> login(@RequestBody Map<String, String> body) {
-        String correo = body.get("correo");
-        String contrasenia = body.get("contrasenia");
+    /**
+     * Cambiar estado de un usuario
+     * PATCH /api/usuarios/{id}/estado
+     */
+    @PatchMapping("/{id}/estado")
+    @Operation(summary = "Cambiar estado", description = "Cambia el estado de un usuario (activo/suspendido) - Solo admin")
+    public ResponseEntity<ApiResponse<Usuario>> cambiarEstado(
+            @PathVariable String id,
+            @RequestBody Map<String, String> body) {
 
-        return usuarioService.iniciarSesion(correo, contrasenia)
-                .map(ResponseEntity::ok)
-                .orElse(ResponseEntity.status(HttpStatus.UNAUTHORIZED)
-                        .body((Usuario) Map.of("mensaje", "Credenciales inválidas")));
+        String nuevoEstado = body.get("estado");
+        Usuario actualizado = usuarioService.actualizarEstado(id, nuevoEstado);
+        return ResponseEntity.ok(ApiResponse.success("Estado actualizado correctamente", actualizado));
     }
 
-    @PutMapping("/{id}/estado")
-    public ResponseEntity<Usuario> cambiarEstado(@PathVariable String id, @RequestBody Map<String, String> body) {
-        Usuario actualizado = usuarioService.actualizarEstado(id, body.get("estado"));
-        return ResponseEntity.ok(actualizado);
-    }
-
+    /**
+     * Eliminar usuario
+     * DELETE /api/usuarios/{id}
+     */
     @DeleteMapping("/{id}")
-    public ResponseEntity<Void> eliminar(@PathVariable String id) {
+    @Operation(summary = "Eliminar usuario", description = "Elimina un usuario del sistema (solo admin)")
+    public ResponseEntity<ApiResponse<Void>> eliminar(@PathVariable String id) {
         usuarioService.eliminarUsuario(id);
-        return ResponseEntity.noContent().build();
+
+        ApiResponse<Void> response = new ApiResponse<>();
+        response.setSuccess(true);
+        response.setMessage("Usuario eliminado exitosamente");
+        response.setData(null);
+
+        return ResponseEntity.ok(response);
     }
 }

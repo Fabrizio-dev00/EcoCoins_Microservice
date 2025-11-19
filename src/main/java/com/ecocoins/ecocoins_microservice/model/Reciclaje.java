@@ -15,10 +15,20 @@ public class Reciclaje {
     private int ecoCoinsGanadas;
     private LocalDateTime fecha;
 
+    // ⭐ CAMPOS NUEVOS
+    private String contenedorCodigo; // Del QR escaneado
+    private String puntoRecoleccion;
+    private String fotoUrl; // URL de la foto del material
+    private String observaciones;
+    private boolean verificado; // Si fue verificado por un admin
+    private String verificadoPor; // ID del admin que verificó
+
     public Reciclaje() {
         this.fecha = LocalDateTime.now();
+        this.verificado = false;
     }
 
+    // Getters y Setters existentes...
     public String getId() { return id; }
     public void setId(String id) { this.id = id; }
 
@@ -32,8 +42,37 @@ public class Reciclaje {
     public void setPesoKg(double pesoKg) { this.pesoKg = pesoKg; }
 
     public int getEcoCoinsGanadas() { return ecoCoinsGanadas; }
-    public void setEcoCoinsGanadas(int ecoCoinsGanadas) { this.ecoCoinsGanadas = ecoCoinsGanadas; }
+    public void setEcoCoinsGanadas(int ecoCoinsGanadas) {
+        this.ecoCoinsGanadas = ecoCoinsGanadas;
+    }
 
     public LocalDateTime getFecha() { return fecha; }
     public void setFecha(LocalDateTime fecha) { this.fecha = fecha; }
+
+    // ⭐ Getters y Setters NUEVOS
+    public String getContenedorCodigo() { return contenedorCodigo; }
+    public void setContenedorCodigo(String contenedorCodigo) {
+        this.contenedorCodigo = contenedorCodigo;
+    }
+
+    public String getPuntoRecoleccion() { return puntoRecoleccion; }
+    public void setPuntoRecoleccion(String puntoRecoleccion) {
+        this.puntoRecoleccion = puntoRecoleccion;
+    }
+
+    public String getFotoUrl() { return fotoUrl; }
+    public void setFotoUrl(String fotoUrl) { this.fotoUrl = fotoUrl; }
+
+    public String getObservaciones() { return observaciones; }
+    public void setObservaciones(String observaciones) {
+        this.observaciones = observaciones;
+    }
+
+    public boolean isVerificado() { return verificado; }
+    public void setVerificado(boolean verificado) { this.verificado = verificado; }
+
+    public String getVerificadoPor() { return verificadoPor; }
+    public void setVerificadoPor(String verificadoPor) {
+        this.verificadoPor = verificadoPor;
+    }
 }

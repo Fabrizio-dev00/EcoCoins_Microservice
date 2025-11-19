@@ -18,15 +18,26 @@ public class Usuario {
     private boolean confirmado;
     private LocalDateTime fechaRegistro;
 
+    // ⭐ CAMPOS NUEVOS
+    private String carrera;
+    private String telefono;
+    private String avatar;
+    private int nivel; // 1=Bronce, 2=Plata, 3=Oro, 4=Platino
+    private int totalReciclajes;
+    private double totalKgReciclados;
+
     public Usuario() {
         this.fechaRegistro = LocalDateTime.now();
         this.estado = "activo";
         this.rol = "usuario";
         this.confirmado = false;
         this.ecoCoins = 0;
+        this.nivel = 1; // Empieza en Bronce
+        this.totalReciclajes = 0;
+        this.totalKgReciclados = 0.0;
     }
 
-    // Getters y Setters
+    // Getters y Setters existentes...
     public String getId() { return id; }
     public void setId(String id) { this.id = id; }
 
@@ -52,5 +63,30 @@ public class Usuario {
     public void setConfirmado(boolean confirmado) { this.confirmado = confirmado; }
 
     public LocalDateTime getFechaRegistro() { return fechaRegistro; }
-    public void setFechaRegistro(LocalDateTime fechaRegistro) { this.fechaRegistro = fechaRegistro; }
+    public void setFechaRegistro(LocalDateTime fechaRegistro) {
+        this.fechaRegistro = fechaRegistro;
+    }
+
+    // ⭐ Getters y Setters NUEVOS
+    public String getCarrera() { return carrera; }
+    public void setCarrera(String carrera) { this.carrera = carrera; }
+
+    public String getTelefono() { return telefono; }
+    public void setTelefono(String telefono) { this.telefono = telefono; }
+
+    public String getAvatar() { return avatar; }
+    public void setAvatar(String avatar) { this.avatar = avatar; }
+
+    public int getNivel() { return nivel; }
+    public void setNivel(int nivel) { this.nivel = nivel; }
+
+    public int getTotalReciclajes() { return totalReciclajes; }
+    public void setTotalReciclajes(int totalReciclajes) {
+        this.totalReciclajes = totalReciclajes;
+    }
+
+    public double getTotalKgReciclados() { return totalKgReciclados; }
+    public void setTotalKgReciclados(double totalKgReciclados) {
+        this.totalKgReciclados = totalKgReciclados;
+    }
 }
