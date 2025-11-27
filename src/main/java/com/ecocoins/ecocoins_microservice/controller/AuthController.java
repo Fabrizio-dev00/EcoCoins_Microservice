@@ -19,7 +19,7 @@ import java.util.Map;
 @Slf4j
 @RestController
 @RequestMapping("/api/auth")
-@CrossOrigin(origins = "*")
+// ⭐ ELIMINADA LA LÍNEA: @CrossOrigin(origins = "*")
 @Tag(name = "Autenticación", description = "Endpoints para registro y autenticación con Firebase")
 public class AuthController {
 
@@ -37,6 +37,9 @@ public class AuthController {
     @Operation(summary = "Sincronizar usuario", description = "Crea o actualiza usuario en MongoDB después del registro en Firebase")
     public ResponseEntity<ApiResponse<Usuario>> sincronizarUsuario(
             @RequestBody Map<String, String> request) {
+
+        // ⭐ LOG TEMPORAL PARA CONFIRMAR QUE EL CÓDIGO SE ACTUALIZÓ
+        System.out.println("🟢🟢🟢 BACKEND ACTUALIZADO - CORS CORREGIDO 🟢🟢🟢");
 
         String firebaseUid = request.get("firebaseUid");
         String email = request.get("email");
