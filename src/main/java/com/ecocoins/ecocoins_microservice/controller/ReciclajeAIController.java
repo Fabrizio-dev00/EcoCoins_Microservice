@@ -36,7 +36,7 @@ import java.util.Map;
 @Tag(name = "Reciclaje con IA", description = "Validación de materiales con Inteligencia Artificial")
 public class ReciclajeAIController {
 
-    private final GeminiAIService claudeAIService;
+    private final GeminiAIService geminiAIService;
     private final UsuarioRepository usuarioRepository;
     private final ContenedorRepository contenedorRepository;
     private final ReciclajeRepository reciclajeRepository;
@@ -58,7 +58,7 @@ public class ReciclajeAIController {
             ReciclajeRepository reciclajeRepository,
             NotificacionService notificacionService
     ) {
-        this.claudeAIService = claudeAIService;
+        this.geminiAIService = claudeAIService;
         this.usuarioRepository = usuarioRepository;
         this.contenedorRepository = contenedorRepository;
         this.reciclajeRepository = reciclajeRepository;
@@ -106,8 +106,8 @@ public class ReciclajeAIController {
             }
         }
 
-        // 3. Validar con Claude AI
-        ValidationResponse validation = claudeAIService.validateMaterial(
+        // 3. Validar con Gemini AI
+        ValidationResponse validation = geminiAIService.validateMaterial(
                 request.getImagenBase64(),
                 request.getTipoMaterialEsperado()
         );
@@ -152,7 +152,7 @@ public class ReciclajeAIController {
         reciclaje.setEcoCoinsGanadas(ecoCoinsTotal);
         reciclaje.setFecha(LocalDateTime.now());
         reciclaje.setVerificado(true);
-        reciclaje.setVerificadoPor("IA-Claude");
+        reciclaje.setVerificadoPor("IA-Gemini");
 
         if (contenedor != null) {
             reciclaje.setContenedorCodigo(contenedor.getCodigo());

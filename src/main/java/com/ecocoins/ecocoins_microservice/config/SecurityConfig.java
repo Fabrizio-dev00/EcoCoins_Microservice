@@ -39,6 +39,7 @@ public class SecurityConfig {
                                 "/api/auth/**",
                                 "/api/recompensas",
                                 "/api/estadisticas",
+                                "/api/reciclajes/validar-ia",
                                 "/swagger-ui/**",
                                 "/v3/api-docs/**",
                                 "/actuator/**",
