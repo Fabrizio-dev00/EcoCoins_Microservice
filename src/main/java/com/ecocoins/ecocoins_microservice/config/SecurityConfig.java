@@ -35,16 +35,54 @@ public class SecurityConfig {
                         session.sessionCreationPolicy(SessionCreationPolicy.STATELESS)
                 )
                 .authorizeHttpRequests(auth -> auth
+                        // ========== RUTAS PÚBLICAS (SIN AUTENTICACIÓN) ==========
                         .requestMatchers(
+                                // Autenticación
                                 "/api/auth/**",
+
+                                // Endpoints públicos existentes
                                 "/api/recompensas",
                                 "/api/estadisticas",
                                 "/api/reciclajes/validar-ia",
+
+                                // Documentación Swagger
                                 "/swagger-ui/**",
                                 "/v3/api-docs/**",
+
+                                // Actuator y errores
                                 "/actuator/**",
                                 "/error"
                         ).permitAll()
+
+                        // ========== RUTAS PROTEGIDAS - FASE 2: GAMIFICACIÓN ==========
+                        .requestMatchers(
+                                "/api/ranking/**",
+                                "/api/logros/**",
+                                "/api/estadisticas/detalladas/**"
+                        ).authenticated()
+
+                        // ========== RUTAS PROTEGIDAS - FASE 3: COMUNIDAD ==========
+                        .requestMatchers(
+                                "/api/notificaciones/**",
+                                "/api/referidos/**",
+                                "/api/mapa/**"
+                        ).authenticated()
+
+                        // ========== RUTAS PROTEGIDAS - FASE 4: EDUCACIÓN Y SOPORTE ==========
+                        .requestMatchers(
+                                "/api/educacion/**",
+                                "/api/soporte/**"
+                        ).authenticated()
+
+                        // ========== RUTAS EXISTENTES (YA PROTEGIDAS) ==========
+                        .requestMatchers(
+                                "/api/usuarios/**",
+                                "/api/reciclajes/**",
+                                "/api/canjes/**",
+                                "/api/configuracion/**"
+                        ).authenticated()
+
+                        // Todas las demás rutas requieren autenticación
                         .anyRequest().authenticated()
                 )
                 .addFilterBefore(
