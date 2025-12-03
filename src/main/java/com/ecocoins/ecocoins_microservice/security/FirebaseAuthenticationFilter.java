@@ -29,10 +29,11 @@ public class FirebaseAuthenticationFilter extends OncePerRequestFilter {
 
         String path = request.getRequestURI();
 
+        // ✅ AGREGAR ESTE LOG
+        log.info("🔍 Procesando ruta: {} - Method: {}", path, request.getMethod());
+
         // Rutas públicas que NO requieren autenticación
         if (path.startsWith("/api/auth/") ||
-                path.startsWith("/api/recompensas") ||
-                path.startsWith("/api/estadisticas") ||
                 path.startsWith("/swagger-ui/") ||
                 path.startsWith("/v3/api-docs/") ||
                 path.startsWith("/actuator/") ||
@@ -46,8 +47,14 @@ public class FirebaseAuthenticationFilter extends OncePerRequestFilter {
         // Obtener token del header Authorization
         String authHeader = request.getHeader("Authorization");
 
+        // ✅ AGREGAR ESTE LOG
+        log.info("🔑 Authorization header: {}", authHeader != null ? "PRESENTE" : "❌ AUSENTE");
+
         if (authHeader != null && authHeader.startsWith("Bearer ")) {
             String token = authHeader.substring(7);
+
+            // ✅ AGREGAR ESTE LOG
+            log.info("🎫 Token extraído (primeros 50 chars): {}", token.substring(0, Math.min(50, token.length())));
 
             try {
                 // Verificar token con Firebase Admin SDK
@@ -56,7 +63,7 @@ public class FirebaseAuthenticationFilter extends OncePerRequestFilter {
                 String uid = decodedToken.getUid();
                 String email = decodedToken.getEmail();
 
-                log.debug("✅ Usuario autenticado: {} (UID: {})", email, uid);
+                log.info("✅ Usuario autenticado: {} (UID: {})", email, uid);
 
                 // Crear autenticación de Spring Security
                 UsernamePasswordAuthenticationToken auth =
@@ -71,6 +78,9 @@ public class FirebaseAuthenticationFilter extends OncePerRequestFilter {
             } catch (Exception e) {
                 log.error("❌ Token inválido: {}", e.getMessage());
             }
+        } else {
+            // ✅ AGREGAR ESTE LOG
+            log.warn("⚠️ No se encontró token de autenticación para ruta protegida: {}", path);
         }
 
         filterChain.doFilter(request, response);

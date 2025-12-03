@@ -12,7 +12,6 @@ import java.util.Map;
 
 @RestController
 @RequestMapping("/api/estadisticas/detalladas")
-@CrossOrigin(origins = "*")
 @SecurityRequirement(name = "bearerAuth")
 @Tag(name = "Estadísticas Detalladas", description = "Análisis completo del impacto ambiental")
 public class EstadisticasDetalladasController {

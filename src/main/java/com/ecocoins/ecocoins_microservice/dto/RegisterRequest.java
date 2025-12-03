@@ -20,6 +20,7 @@ public class RegisterRequest {
 
     private String carrera;
     private String telefono;
+    private String firebaseUid;  // ✅ Campo agregado
 
     // Constructors
     public RegisterRequest() {}
@@ -45,4 +46,7 @@ public class RegisterRequest {
 
     public String getTelefono() { return telefono; }
     public void setTelefono(String telefono) { this.telefono = telefono; }
+
+    public String getFirebaseUid() { return firebaseUid; }
+    public void setFirebaseUid(String firebaseUid) { this.firebaseUid = firebaseUid; }
 }

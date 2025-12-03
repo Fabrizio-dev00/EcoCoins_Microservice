@@ -43,6 +43,7 @@ public class SecurityConfig {
                                 // Endpoints públicos existentes
                                 "/api/recompensas",
                                 "/api/estadisticas",
+                                "/api/estadisticas/**",
                                 "/api/reciclajes/validar-ia",
 
                                 // Documentación Swagger
@@ -97,8 +98,12 @@ public class SecurityConfig {
     public CorsConfigurationSource corsConfigurationSource() {
         CorsConfiguration configuration = new CorsConfiguration();
 
-        // ⭐ USAR allowedOriginPatterns EN LUGAR DE allowedOrigins
-        configuration.setAllowedOriginPatterns(List.of("*"));
+        // ✅ CORREGIDO: Especificar orígenes explícitos
+        configuration.setAllowedOrigins(List.of(
+                "http://localhost:3000",
+                "http://localhost:8081",
+                "http://10.0.2.2:8080"
+        ));
 
         configuration.setAllowedMethods(List.of("GET", "POST", "PUT", "DELETE", "OPTIONS"));
         configuration.setAllowedHeaders(List.of("*"));

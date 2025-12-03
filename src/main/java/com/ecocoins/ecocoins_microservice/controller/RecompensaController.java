@@ -9,7 +9,6 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/api/recompensas")
-@CrossOrigin(origins = "*")
 public class RecompensaController {
 
     @Autowired
@@ -18,6 +17,17 @@ public class RecompensaController {
     @GetMapping
     public ResponseEntity<List<Recompensa>> listarRecompensas() {
         return ResponseEntity.ok(recompensaService.listarRecompensas());
+    }
+
+    // ⭐ ENDPOINT DISPONIBLES
+    @GetMapping("/disponibles")
+    public ResponseEntity<List<Recompensa>> obtenerRecompensasDisponibles() {
+        List<Recompensa> recompensas = recompensaService.listarRecompensas();
+        // Filtrar solo las que tienen stock > 0
+        List<Recompensa> disponibles = recompensas.stream()
+                .filter(r -> r.getStock() > 0)
+                .toList();
+        return ResponseEntity.ok(disponibles);
     }
 
     @GetMapping("/{id}")

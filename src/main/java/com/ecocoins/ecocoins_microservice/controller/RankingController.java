@@ -13,7 +13,6 @@ import java.util.Map;
 
 @RestController
 @RequestMapping("/api/ranking")
-@CrossOrigin(origins = "*")
 @SecurityRequirement(name = "bearerAuth")
 @Tag(name = "Ranking", description = "Sistema de ranking y tabla de posiciones")
 public class RankingController {
@@ -25,7 +24,40 @@ public class RankingController {
     }
 
     /**
-     * Obtener ranking por periodo
+     * Obtener ranking global (histórico)
+     * GET /api/ranking/global
+     */
+    @GetMapping("/global")
+    @Operation(summary = "Obtener ranking global", description = "Obtiene el ranking histórico de todos los usuarios")
+    public ResponseEntity<ApiResponse<List<Map<String, Object>>>> obtenerRankingGlobal() {
+        List<Map<String, Object>> ranking = rankingService.obtenerRankingPorPeriodo("HISTORICO");
+        return ResponseEntity.ok(ApiResponse.success(ranking));
+    }
+
+    /**
+     * Obtener ranking semanal
+     * GET /api/ranking/semanal
+     */
+    @GetMapping("/semanal")
+    @Operation(summary = "Obtener ranking semanal", description = "Obtiene el ranking de la última semana")
+    public ResponseEntity<ApiResponse<List<Map<String, Object>>>> obtenerRankingSemanal() {
+        List<Map<String, Object>> ranking = rankingService.obtenerRankingPorPeriodo("SEMANAL");
+        return ResponseEntity.ok(ApiResponse.success(ranking));
+    }
+
+    /**
+     * Obtener ranking mensual
+     * GET /api/ranking/mensual
+     */
+    @GetMapping("/mensual")
+    @Operation(summary = "Obtener ranking mensual", description = "Obtiene el ranking del último mes")
+    public ResponseEntity<ApiResponse<List<Map<String, Object>>>> obtenerRankingMensual() {
+        List<Map<String, Object>> ranking = rankingService.obtenerRankingPorPeriodo("MENSUAL");
+        return ResponseEntity.ok(ApiResponse.success(ranking));
+    }
+
+    /**
+     * Obtener ranking por periodo (genérico - mantener por compatibilidad)
      * GET /api/ranking/{periodo}
      */
     @GetMapping("/{periodo}")

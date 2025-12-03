@@ -31,7 +31,6 @@ import java.util.Map;
 @Slf4j
 @RestController
 @RequestMapping("/api/reciclajes")
-@CrossOrigin(origins = "*")
 @SecurityRequirement(name = "bearerAuth")
 @Tag(name = "Reciclaje con IA", description = "Validación de materiales con Inteligencia Artificial")
 public class ReciclajeAIController {

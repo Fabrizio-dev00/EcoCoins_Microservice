@@ -8,12 +8,12 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
 @RestController
 @RequestMapping("/api/logros")
-@CrossOrigin(origins = "*")
 @SecurityRequirement(name = "bearerAuth")
 @Tag(name = "Logros", description = "Sistema de logros y achievements")
 public class LogrosController {
@@ -22,6 +22,27 @@ public class LogrosController {
 
     public LogrosController(LogrosService logrosService) {
         this.logrosService = logrosService;
+    }
+
+    /**
+     * Obtener resumen de logros de un usuario
+     * GET /api/logros/usuario/{usuarioId}/resumen
+     */
+    @GetMapping("/usuario/{usuarioId}/resumen")
+    @Operation(summary = "Resumen de logros", description = "Obtiene un resumen de los logros del usuario")
+    public ResponseEntity<ApiResponse<Map<String, Object>>> obtenerResumenLogros(
+            @PathVariable String usuarioId) {
+
+        Map<String, Object> logrosData = logrosService.obtenerLogrosUsuario(usuarioId);
+
+        // Extraer solo el resumen (sin la lista completa de logros)
+        Map<String, Object> resumen = new HashMap<>();
+        resumen.put("totalLogros", logrosData.get("totalLogros"));
+        resumen.put("logrosDesbloqueados", logrosData.get("logrosCompletados"));
+        resumen.put("porcentajeCompletado", logrosData.get("progresoPorcentaje"));
+        resumen.put("ecoCoinsGanados", logrosData.get("totalEcoCoinsGanados"));
+
+        return ResponseEntity.ok(ApiResponse.success(resumen));
     }
 
     /**
