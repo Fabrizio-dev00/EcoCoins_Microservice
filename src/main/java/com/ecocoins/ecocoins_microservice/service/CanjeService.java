@@ -10,6 +10,7 @@ import com.ecocoins.ecocoins_microservice.repository.CanjeRepository;
 import com.ecocoins.ecocoins_microservice.repository.RecompensaRepository;
 import com.ecocoins.ecocoins_microservice.repository.UsuarioRepository;
 import com.ecocoins.ecocoins_microservice.util.ValidationUtil;
+import jakarta.annotation.PostConstruct;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -35,6 +36,43 @@ public class CanjeService {
         this.usuarioRepository = usuarioRepository;
         this.recompensaRepository = recompensaRepository;
         this.notificacionService = notificacionService;
+    }
+
+    @PostConstruct
+    public void inicializarDatosPrueba() {
+        // Solo crear si no hay canjes
+        if (canjeRepository.count() == 0) {
+            System.out.println("⚙️ Inicializando datos de prueba para canjes...");
+
+            // Buscar un usuario existente
+            List<Usuario> usuarios = usuarioRepository.findAll();
+            if (!usuarios.isEmpty()) {
+                Usuario usuario = usuarios.get(0);
+
+                // Buscar una recompensa existente
+                List<Recompensa> recompensas = recompensaRepository.findAll();
+                if (!recompensas.isEmpty()) {
+                    Recompensa recompensa = recompensas.get(0);
+
+                    // Crear canje de prueba
+                    Canje canje = new Canje();
+                    canje.setUsuarioId(usuario.getId());
+                    canje.setUsuarioNombre(usuario.getNombre());
+                    canje.setRecompensaId(recompensa.getId());
+                    canje.setRecompensaNombre(recompensa.getNombre());
+                    canje.setCostoEcoCoins(recompensa.getCostoEcoCoins());
+                    canje.setEstado("completado");
+                    canje.setDireccionEntrega("Campus universitario");
+                    canje.setTelefonoContacto("555-1234");
+                    canje.setFechaCanje(LocalDateTime.now().minusDays(2));
+                    canje.setFechaEntrega(LocalDateTime.now().minusDays(1));
+
+                    canjeRepository.save(canje);
+
+                    System.out.println("✅ Colección 'canjes' creada con datos de prueba");
+                }
+            }
+        }
     }
 
     /**
